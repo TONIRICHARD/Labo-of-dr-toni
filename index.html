@@ -393,6 +393,39 @@ html,body{min-height:100%;font-family:'Outfit',sans-serif;background:var(--bg);c
 #tst.show{transform:translateX(-50%) translateY(0);opacity:1;}
 #ifl{display:none;}
 @media(min-width:600px){.pgrid{flex-direction:row;}.sgrid{grid-template-columns:repeat(4,1fr);}}
+
+/* ── DIRECT v6 : mains levées, parole élève, caméra prof ── */
+#hand-ban{display:none;align-items:center;gap:.6rem;background:linear-gradient(90deg,#fbbf2430,#f9731620);border-bottom:1px solid #fbbf2466;padding:.6rem .9rem;flex-shrink:0;font-size:.82rem;color:var(--yw);cursor:pointer;animation:hpl 1.4s infinite;}
+#hand-ban.show{display:flex;}
+#hand-ban .hw{font-size:1.4rem;display:inline-block;transform-origin:70% 80%;animation:hwv .9s infinite;}
+.hgo{background:var(--yw);color:#000;font-weight:800;font-size:.7rem;padding:.25rem .7rem;border-radius:14px;}
+@keyframes hwv{0%,100%{transform:rotate(-14deg);}50%{transform:rotate(20deg);}}
+@keyframes hpl{0%,100%{background-color:#fbbf2410;}50%{background-color:#fbbf2432;}}
+#spk-ban{display:none;align-items:center;gap:.55rem;background:#3b82f61a;border-bottom:1px solid #3b82f655;padding:.45rem .9rem;flex-shrink:0;font-size:.78rem;color:var(--bl);font-weight:700;}
+#spk-ban.show{display:flex;}
+#spk-ban .ab{background:var(--bl);}
+#hand-sheet{position:fixed;inset:0;background:#000000cc;display:none;align-items:flex-end;justify-content:center;z-index:160;}
+#hand-sheet.show{display:flex;}
+.hs-in{background:var(--sf2);border-radius:20px 20px 0 0;border-top:1px solid var(--bd);width:100%;max-width:480px;max-height:75vh;overflow-y:auto;padding:1rem .9rem 1.5rem;animation:slup .28s cubic-bezier(.34,1.4,.64,1);}
+.hs-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem;font-size:1rem;}
+.hs-row{display:flex;align-items:center;gap:.5rem;padding:.6rem .7rem;background:var(--sf3);border:1px solid var(--bd);border-radius:12px;margin-bottom:.45rem;}
+.hs-row .nm{flex:1;font-weight:700;font-size:.86rem;}.hs-row .tm{font-size:.6rem;color:var(--mu);font-family:'JetBrains Mono',monospace;}
+.hs-ok{background:var(--gr);color:#000;border:none;border-radius:9px;padding:.45rem .7rem;font-weight:800;font-size:.72rem;cursor:pointer;font-family:'Outfit',sans-serif;}
+.hs-no{background:#ef444422;color:var(--rd);border:1px solid #ef444433;border-radius:9px;padding:.45rem .6rem;font-weight:800;font-size:.72rem;cursor:pointer;}
+#st-bar{position:fixed;right:.6rem;bottom:calc(var(--nh) + .6rem);z-index:45;display:none;align-items:center;gap:.4rem;background:#0c1420ee;border:1.5px solid #fbbf2455;border-radius:30px;padding:.35rem;box-shadow:0 6px 24px #000000aa;backdrop-filter:blur(8px);}
+#st-bar.show{display:flex;}
+#st-bar button{border:none;border-radius:24px;padding:.6rem 1rem;font-family:'Outfit',sans-serif;font-weight:800;font-size:.8rem;cursor:pointer;}
+.stb-hand{background:linear-gradient(135deg,#fbbf24,#f97316);color:#000;}
+.stb-wait{background:#fbbf2426;color:var(--yw);border:1px solid #fbbf2455!important;}
+.stb-live{background:var(--gr);color:#000;animation:mpls 1.2s infinite;}
+.stb-sm{background:#ffffff14;color:var(--tx);padding:.6rem .8rem!important;}
+.stb-end{background:#ef444426;color:var(--rd);}
+#prof-cam{position:fixed;left:.6rem;bottom:calc(var(--nh) + .6rem);width:128px;height:96px;border-radius:12px;overflow:hidden;border:2px solid #22d3a066;box-shadow:0 6px 24px #000000aa;display:none;z-index:44;background:#000;cursor:pointer;}
+#prof-cam.show{display:block;}
+#prof-cam.big{inset:var(--hh) 0 var(--nh) 0;width:auto;height:auto;border-radius:0;z-index:48;}
+#prof-cam video,#cam-pv video{object-fit:cover!important;}
+#cam-pv,#prof-cam-v{width:100%;height:100%;}
+.cam-flip{position:absolute;top:3px;right:3px;background:#000000aa;border:none;color:#fff;border-radius:50%;width:24px;height:24px;font-size:.7rem;cursor:pointer;z-index:2;}
 </style>
 </head>
 <body>
@@ -730,7 +763,6 @@ html,body{min-height:100%;font-family:'Outfit',sans-serif;background:var(--bg);c
       <span class="brand">⚡ Prof. TONI</span>
     </div>
     <div class="hdr-r">
-      <button id="btn-jitsi" onclick="ouvrirJitsi()" style="display:none;align-items:center;gap:.28rem;padding:.25rem .6rem;border-radius:20px;border:1.5px solid #25d36644;font-family:Outfit,sans-serif;font-weight:700;font-size:.68rem;cursor:pointer;background:#25d36615;color:#25d366;flex-shrink:0;">📹 Jitsi</button>
       <button id="btn-mic" onclick="toggleMic()"><span id="mic-ic">🎙️</span><div class="wbs" id="wbs"><div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div></div><span id="mic-lb">Micro</span></button>
       <button id="btn-cam" onclick="toggleCam()">📹 <span id="cam-lb">Caméra</span></button>
       <span class="ptag" id="cls-rtag"></span>
@@ -738,8 +770,9 @@ html,body{min-height:100%;font-family:'Outfit',sans-serif;background:var(--bg);c
       <span style="font-family:'JetBrains Mono',monospace;font-size:.66rem;color:var(--mu2)" id="cls-cn">0</span>
     </div>
   </div>
-  <div id="jitsi-embed" style="display:none;width:100%;background:#000;flex-shrink:0;"></div>
   <div id="aud-ban"><div class="abs"><div class="ab"></div><div class="ab"></div><div class="ab"></div><div class="ab"></div><div class="ab"></div></div><span style="flex:1">🔊 Prof. TONI parle en direct</span><button id="btn-aok" onclick="autoAud()" style="display:none;padding:.28rem .65rem;background:var(--rd);color:#fff;border:none;border-radius:7px;font-weight:700;font-size:.7rem;cursor:pointer;">Activer son</button></div>
+  <div id="hand-ban" onclick="ouvrirMains()"></div>
+  <div id="spk-ban"><div class="abs"><div class="ab"></div><div class="ab"></div><div class="ab"></div><div class="ab"></div><div class="ab"></div></div><span id="spk-n" style="flex:1"></span><button class="abtn abtn-r" onclick="couperParole()">🔇 Couper</button></div>
   <div id="rec-ban"><div style="display:flex;align-items:center;gap:.4rem;font-size:.75rem;color:var(--rd);font-weight:700"><div style="width:8px;height:8px;border-radius:50%;background:var(--rd);animation:blk .8s infinite"></div>Enregistrement en cours</div><button onclick="stopRec()" style="padding:.25rem .6rem;background:var(--rd);color:#fff;border:none;border-radius:6px;font-weight:700;font-size:.68rem;cursor:pointer;">⏹ Arrêter</button></div>
   <div id="cls-tb">
     <label for="ifl" class="tb tb-g">📂 Ouvrir</label>
@@ -772,7 +805,10 @@ html,body{min-height:100%;font-family:'Outfit',sans-serif;background:var(--bg);c
     <div id="cw"><canvas id="pca"></canvas><canvas id="dca"></canvas></div>
   </div>
   <div id="sb">📡 Direct</div>
-  <div id="cam-box"><video id="cam-vid" autoplay muted playsinline></video><div class="cam-lbl">📹 Prof. TONI</div></div>
+  <div id="cam-box"><div id="cam-pv"></div><button class="cam-flip" onclick="flipCam()">🔄</button><div class="cam-lbl">📹 Vous (visible des élèves)</div></div>
+  <div id="prof-cam" onclick="this.classList.toggle('big')"><div id="prof-cam-v"></div><div class="cam-lbl">📹 Prof. TONI — touchez pour agrandir</div></div>
+  <div id="st-bar"></div>
+  <div id="hand-sheet" onclick="if(event.target===this)fermerMains()"><div class="hs-in"><div class="hs-h"><b>✋ Mains levées</b><button class="cpn-cl" onclick="fermerMains()">✕</button></div><div id="hs-list"></div></div></div>
   <!-- Caméra élève devoir sur table -->
   <div id="elv-cam-box"><video id="elv-cam-vid-cls" autoplay muted playsinline></video><div class="elv-cam-lbl">📹 Moi</div></div>
   <div class="bnv">
@@ -1853,7 +1889,6 @@ function appliquerConnexion(){
     setTimeout(chargerMsgsElv,1200);
     setTimeout(chargerCertsElv,1400);
     setTimeout(chargerDevoirsElv,1600);
-    setTimeout(ecouterJitsi,1200);
   }
 }
 
@@ -1933,32 +1968,38 @@ function ouvrirClasse(r){
   const bm=el('btn-mic');if(bm)bm.classList.toggle('show',isP);
   const bc=el('btn-cam');if(bc)bc.classList.toggle('show',isP);
   const tag=el('cls-rtag');if(tag){tag.textContent=isP?'👨‍🏫 Prof':'🎓 '+(CU.nom.split(' ')[0]||'Élève');tag.className='ptag '+(isP?'ptag-pf':'ptag-fr');}
-  if(isP){elSet('e-ic','text','📂');elSet('e-mg','text','Aucun cours ouvert');elSet('e-sb','text','Touchez "Ouvrir"');var bj=el('btn-jitsi');if(bj)bj.style.display='flex';}
+  if(isP){elSet('e-ic','text','📂');elSet('e-mg','text','Aucun cours ouvert');elSet('e-sb','text','Touchez "Ouvrir"');}
   else{elSet('e-ic','text','📡');elSet('e-mg','text','En attente du prof...');elSet('e-sb','text','Le cours s\'affichera automatiquement');elSet('rec-btn-zone','display','block');}
   const sb=el('sb');if(sb)sb.classList.toggle('show',!isP);
   if(isP){const cz=el('cz');if(cz)cz.addEventListener('scroll',onScrollP,{passive:true});}
   if(!fbOk)initFB();
   enregPres();
+  ecouterClasse();ecouterRole();
+  const sbr=el('st-bar');if(sbr)sbr.classList.toggle('show',!isP);
+  majStBar();
+  if(!isP){if(CU.plan==='free')showAudBan(true);else liveReady().catch(()=>toast('⚠️ Audio : vérifiez votre connexion'));}
   showScreen('s-cls');
   setTimeout(initDrawEvents,100);
 }
 function quitterClasse(){
   if(microOn)couperMic();if(camOn)stopCam();if(enregOn)stopRec();
-  if(elvStream){elvStream.getTracks().forEach(t=>t.stop());elvStream=null;}
+  if(floorOn)libererParole();
+  quitterLive();
   if(fbOk){db.ref('classe/presence/'+CU.id).remove();db.ref('classe/main/'+CU.id).remove();}
-  mainLevee=false;closeCpn();
+  mainLevee=false;closeCpn();fermerMains();
+  const sbr=el('st-bar');if(sbr)sbr.classList.remove('show');
   showScreen(CU.role==='prof'?'s-prf':(CU.role==='admin'?'s-adm':'s-elv'));
 }
 function enregPres(){if(!fbOk||!db)return;const r=db.ref('classe/presence/'+CU.id);r.set({nom:CU.nom||'Utilisateur',role:CU.role,ts:Date.now()});r.onDisconnect().remove();}
 
+let _comOn=false;
 function ecouterClasse(){
-  if(!fbOk||!db)return;
+  if(!fbOk||!db||_comOn)return;_comOn=true;
   db.ref('classe/etat').on('value',snap=>{if(CU.role!=='prof'&&snap.val())appEtat(snap.val());});
   db.ref('classe/presence').on('value',snap=>{
     const d=snap.val()||{};
     elSet('cls-cn','text',Object.keys(d).length);
     majEleves(d);
-    if(CU.role==='prof'&&microOn&&localStream)Object.entries(d).forEach(([id,u])=>{if(u.role==='eleve'&&!peerConns[id])creerPeer(id);});
   });
   db.ref('classe/chat').limitToLast(60).on('child_added',snap=>{
     const m=snap.val();
@@ -1979,311 +2020,216 @@ function ecouterClasse(){
   });
   db.ref('classe/dessin').on('child_added',snap=>{if(CU.role!=='prof')dessT(snap.val(),false);});
   db.ref('classe/effacer').on('value',snap=>{if(snap.val()&&CU.role!=='prof')clearCv();});
-  db.ref('classe/micro').on('value',snap=>{
-    if(CU.role!=='prof'){
-      const actif=snap.val()===true;
-      showAudBan(actif);
-      if(actif){demarrerEcouteAudio();}
-      else{
-        // Arrêter l'écoute
-        if(db)db.ref('classe/audio_seq').off();
-        audioQueue=[];audioPlaying=false;lastSeqElv=0;
-        const ab=el('aud-ban');if(ab)ab.classList.remove('show');
-      }
-    }
-  });
   db.ref('classe/quiz_actif').on('value',snap=>{
     const d=snap.val();
     if(CU.role!=='prof'&&d&&d.actif){affQzElv(d);elCls('qz-nt','add','on');}
     else if(CU.role!=='prof'){fermerQzElv();elCls('qz-nt','remove','on');}
   });
-  if(CU.role==='prof'){
-    db.ref('classe/main').on('value',snap=>{
-      const d=snap.val()||{};
-      const dem=Object.entries(d).filter(([id,v])=>v.statut==='demande');
-      const dz=el('dm-zone'),dl=el('dm-list');
-      if(dem.length>0&&dz&&dl){
-        dz.style.display='block';
-        dl.innerHTML=dem.map(([id,v])=>`<div style="display:flex;align-items:center;gap:.45rem;padding:.3rem 0"><span style="font-size:.8rem;flex:1;font-weight:600">✋ ${v.nom}</span><button onclick="autoriserP('${id}','${v.nom}')" style="padding:.25rem .58rem;background:var(--gr);color:#000;border:none;border-radius:6px;font-weight:700;font-size:.68rem;cursor:pointer;">✅</button><button onclick="refuserP('${id}')" style="padding:.25rem .58rem;background:#ef444422;color:var(--rd);border:1px solid #ef444433;border-radius:6px;font-weight:700;font-size:.68rem;cursor:pointer;">❌</button></div>`).join('');
-        toast('✋ '+dem[dem.length-1][1].nom+' demande la parole');
-      }else if(dz&&dl){dz.style.display='none';dl.innerHTML='';}
-      const pk=Object.entries(d).find(([id,v])=>v.statut==='autorise');
-      const bp=el('elv-pk');
-      if(pk){if(bp)bp.style.display='flex';elSet('elv-pk-n','text','🎙️ '+pk[1].nom+' parle');eleveAuth=pk[0];}
-      else{if(bp)bp.style.display='none';eleveAuth=null;}
-    });
-    db.ref('classe/signaling/answers').on('child_added',async snap=>{
-      const eid=snap.key,data=snap.val();
-      if(!data||!peerConns[eid])return;
-      const pc=peerConns[eid];
-      if(pc.signalingState==='have-local-offer')await pc.setRemoteDescription(new RTCSessionDescription(data.sdp));
-    });
-    db.ref('classe/signaling/candidates_eleve').on('child_added',snap=>{
-      const eid=snap.key,pc=peerConns[eid];
-      if(!pc)return;
-      snap.val()?.list?.forEach(c=>pc.addIceCandidate(new RTCIceCandidate(c)).catch(()=>{}));
-    });
-  }else{
-    elSet('z-main','display','block');
-    db.ref('classe/main/'+CU.id).on('value',async snap=>{
-      const d=snap.val();
-      if(!d){mainLevee=false;resetMain();elSet('mic-acc','display','none');if(elvStream){elvStream.getTracks().forEach(t=>t.stop());elvStream=null;}return;}
-      if(d.statut==='demande')elSet('btn-main','text','⏳ En attente...');
-      if(d.statut==='autorise'){
-        elSet('mic-acc','display','block');elSet('btn-main','display','none');
-        toast('🎙️ Le prof vous donne la parole !');
-        if(!jitsiApi){
-          loadJitsiScript(function(){demarrerJitsiEmbed(false);});
-        }else{
-          // Demande explicite (pas toggle) : garantit que le micro s'active vraiment
-          try{jitsiApi.executeCommand('unmuteAudio');}catch(e){}
-        }
-      }
-      if(d.statut==='refuse'){mainLevee=false;resetMain();toast('ℹ️ Pas disponible maintenant');if(fbOk)db.ref('classe/main/'+CU.id).remove();}
-      if(d.statut==='coupe'){
-        elSet('mic-acc','display','none');elSet('btn-main','display','flex');resetMain();mainLevee=false;
-        // Couper réellement le micro Jitsi de l'élève (pas juste l'UI)
-        if(jitsiApi){try{jitsiApi.executeCommand('muteAudio');}catch(e){}}
-        if(elvStream){elvStream.getTracks().forEach(t=>t.stop());elvStream=null;}
-        if(fbOk)db.ref('classe/main/'+CU.id).remove();
-        toast('🔇 Le prof a repris la parole');
-      }
-    });
-    db.ref('classe/signaling/offer').on('value',async snap=>{const d=snap.val();if(d)await recOffer(d);});
-    db.ref('classe/signaling/candidates_prof').on('value',snap=>{
-      const list=snap.val()?.list||[];
-      if(!profPeer)return;
-      list.forEach(c=>profPeer.addIceCandidate(new RTCIceCandidate(c)).catch(()=>{}));
-    });
-  }
+
 }
 
-// ══ MICRO ══
-// ══════════════════════════════════════
-//  AUDIO PROF → ÉLÈVES (Firebase Chunks)
-//  WebRTC non fiable sur réseau 3G Afrique
-//  Solution : chunks audio base64 via Firebase
-// ══════════════════════════════════════
-
-// AUDIO — Agora.io (latence <300ms, Afrique) + Firebase fallback
-const AGORA_APP_ID='8ee19d1c712e44c9bac81b92ad12013c'; // ← Créez compte sur console.agora.io
+// ══ DIRECT — Agora (audio + vidéo + tour de parole) ══
+const AGORA_APP_ID='76ecb67f510e4a108c25bd953c0f6697';
 const AGORA_CHANNEL='prof-toni-classe';
-let agoraClient=null,agoraLocalTrack=null,agoraSdkLoaded=false;
-let audioRec=null,audioSeq=0,audioQueue=[],audioPlaying=false,lastSeqElv=0;
-
+let ag=null,agP=null,agMic=null,agCam=null,agSdk=false,camFace='user';
+let mainData={},lastPres={},nbMainsPrec=0,floorOn=false,stMuted=false,stTalk=false;
+const AUDIO_CFG={AEC:true,ANS:true,AGC:true,encoderConfig:'speech_standard'};
+function escHtml(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function isProfUid(u){return String(u).indexOf('prof_')===0;}
+function liveUid(){return (CU.role==='prof'?'prof_':'')+CU.id;}
 function loadAgoraSdk(cb){
-  if(agoraSdkLoaded){cb();return;}
+  if(agSdk){cb();return;}
   const s=document.createElement('script');
   s.src='https://download.agora.io/sdk/release/AgoraRTC_N-4.22.0.js';
-  s.onload=()=>{agoraSdkLoaded=true;cb();};
-  s.onerror=()=>cb('err');
+  s.onload=()=>{agSdk=true;cb();};s.onerror=()=>cb('err');
   document.head.appendChild(s);
 }
+function liveReady(){
+  if(agP)return agP;
+  agP=new Promise((ok,ko)=>loadAgoraSdk(async err=>{
+    if(err){ko(new Error('reseau'));return;}
+    try{
+      AgoraRTC.setLogLevel(4);
+      AgoraRTC.onAutoplayFailed=()=>elSet('btn-aok','display','flex');
+      const c=AgoraRTC.createClient({mode:'live',codec:'vp8'});
+      c.on('user-published',async(u,mt)=>{
+        try{await c.subscribe(u,mt);}catch(e){return;}
+        if(mt==='audio'){u.audioTrack.play();if(isProfUid(u.uid))showAudBan(true);}
+        if(mt==='video'&&isProfUid(u.uid)&&CU.role!=='prof'){u.videoTrack.play('prof-cam-v');elCls('prof-cam','add','show');}
+      });
+      c.on('user-unpublished',(u,mt)=>{
+        if(mt==='audio'&&isProfUid(u.uid))showAudBan(false);
+        if(mt==='video'&&isProfUid(u.uid)){elCls('prof-cam','remove','show');elCls('prof-cam','remove','big');}
+      });
+      c.on('user-left',u=>{if(isProfUid(u.uid)){showAudBan(false);elCls('prof-cam','remove','show');}});
+      c.enableAudioVolumeIndicator();
+      c.on('volume-indicator',vs=>{
+        const me=liveUid();let other=false;stTalk=false;
+        vs.forEach(v=>{if(v.level>6){if(String(v.uid)===me)stTalk=true;else if(!isProfUid(v.uid))other=true;}});
+        const sb=el('spk-ban');if(sb)sb.classList.toggle('talking',other);
+        const b=el('st-bar');if(b)b.style.borderColor=(floorOn&&stTalk&&!stMuted)?'var(--gr)':'#fbbf2455';
+      });
+      await c.setClientRole(CU.role==='prof'?'host':'audience',CU.role==='prof'?undefined:{level:1});
+      await c.join(AGORA_APP_ID,AGORA_CHANNEL,null,liveUid());
+      ag=c;ok(c);
+    }catch(e){ko(e);}
+  }));
+  agP.catch(()=>{agP=null;ag=null;});
+  return agP;
+}
+async function quitterLive(){
+  try{if(agMic){agMic.close();agMic=null;}if(agCam){agCam.close();agCam=null;}if(ag){await ag.leave();}}catch(e){}
+  ag=null;agP=null;showAudBan(false);elCls('prof-cam','remove','show');
+}
+function errMsg(e,what){return (e&&(e.code==='PERMISSION_DENIED'||e.name==='NotAllowedError'))?'❌ Autorisez '+what+' dans le navigateur':'❌ Connexion impossible — vérifiez le réseau';}
 
+// ── Prof : micro ──
 async function toggleMic(){
-  if(!microOn){
-    ldg(true);
-    loadJitsiScript(function(){
-      demarrerJitsiEmbed(true);
-      microOn=true;
-      elCls('btn-mic','add','on');elCls('wbs','add','show');
-      elSet('mic-lb','text','EN DIRECT');
-      ldg(false);
-    });
-  }else{
-    couperMic();
-  }
-}
-
-async function toggleMicFirebase(){
+  if(microOn){await stopMic();return;}
+  ldg(true);
   try{
-    localStream=await navigator.mediaDevices.getUserMedia({
-      audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true},video:false
-    });
+    const c=await liveReady();
+    agMic=await AgoraRTC.createMicrophoneAudioTrack(AUDIO_CFG);
+    await c.publish(agMic);
     microOn=true;
-    elCls('btn-mic','add','on');elCls('wbs','add','show');
-    elSet('mic-lb','text','EN DIRECT');
-    startAudioChunks();
-    if(fbOk)db.ref('classe/micro').set(true);
-    toast('🎙️ Micro activé');
-  }catch(e){
-    if(e.name==='NotAllowedError')toast('❌ Autorisez le micro');
-    else toast('❌ Micro: '+e.message);
-  }
+    elCls('btn-mic','add','on');elCls('wbs','add','show');elSet('mic-lb','text','EN DIRECT');
+    if(fbOk){db.ref('classe/live').update({micOn:true,ts:Date.now()});db.ref('classe/live/micOn').onDisconnect().set(false);}
+    toast('🎙️ Micro actif — les élèves vous entendent');
+  }catch(e){toast(errMsg(e,'le micro'));}
+  ldg(false);
 }
+async function stopMic(){
+  if(agMic){try{await ag.unpublish(agMic);}catch(e){}try{agMic.close();}catch(e){}agMic=null;}
+  microOn=false;elCls('btn-mic','remove','on');elCls('wbs','remove','show');elSet('mic-lb','text','Micro');
+  if(fbOk)db.ref('classe/live').update({micOn:false});
+}
+function couperMic(){stopMic();}
 
-function startAudioChunks(){
-  if(!localStream)return;
-  const fmts=['audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus','audio/ogg',''];
-  let mimeType='';
-  for(const f of fmts){if(!f||MediaRecorder.isTypeSupported(f)){mimeType=f;break;}}
-  const opts=mimeType?{mimeType,audioBitsPerSecond:24000}:{audioBitsPerSecond:24000};
+// ── Prof : caméra (visible par tous les élèves) ──
+async function toggleCam(){
+  if(camOn){await stopCam();return;}
+  ldg(true);
   try{
-    audioRec=new MediaRecorder(localStream,opts);
-    const realMime=audioRec.mimeType||'audio/webm';
-    let headerChunk=null,chunkIdx=0;
-    audioRec.ondataavailable=async(e)=>{
-      if(!e.data||e.data.size<100)return;
-      try{
-        const buf=await e.data.arrayBuffer();
-        chunkIdx++;
-        if(chunkIdx===1){
-          headerChunk=buf;
-          const a=new Uint8Array(buf);let b='';
-          for(let i=0;i<a.length;i+=4096)b+=String.fromCharCode(...a.subarray(i,i+4096));
-          if(fbOk&&db)await db.ref('classe/audio/header').set({d:btoa(b),m:realMime,ts:Date.now()});
-          return;
-        }
-        let fb=buf;
-        if(headerChunk){
-          const m=new Uint8Array(headerChunk.byteLength+buf.byteLength);
-          m.set(new Uint8Array(headerChunk),0);m.set(new Uint8Array(buf),headerChunk.byteLength);
-          fb=m.buffer;
-        }
-        const a2=new Uint8Array(fb);let b2='';
-        for(let i=0;i<a2.length;i+=4096)b2+=String.fromCharCode(...a2.subarray(i,i+4096));
-        audioSeq++;
-        if(fbOk&&db){
-          await db.ref('classe/audio/c'+audioSeq).set({d:btoa(b2),s:audioSeq,t:Date.now(),m:realMime});
-          if(audioSeq>5)db.ref('classe/audio/c'+(audioSeq-6)).remove().catch(()=>{});
-          db.ref('classe/audio_seq').set(audioSeq);
-        }
-      }catch(e){console.warn('Chunk:',e.message);}
-    };
-    audioRec.start(2500);
-  }catch(e){toast('❌ '+e.message);}
+    const c=await liveReady();
+    agCam=await AgoraRTC.createCameraVideoTrack({facingMode:camFace,encoderConfig:'480p_2'});
+    await c.publish(agCam);agCam.play('cam-pv');
+    camOn=true;elCls('btn-cam','add','on');elSet('cam-lb','text','CAM ON');elCls('cam-box','add','show');
+    if(fbOk){db.ref('classe/live').update({camOn:true});db.ref('classe/live/camOn').onDisconnect().set(false);}
+    toast('📹 Caméra visible par les élèves');
+  }catch(e){toast(errMsg(e,'la caméra'));}
+  ldg(false);
 }
-
-function couperMic(){
-  microOn=false;
-  elCls('btn-mic','remove','on');elCls('wbs','remove','show');
-  elSet('mic-lb','text','Micro');
-  stopJitsi();
+async function stopCam(){
+  if(agCam){try{await ag.unpublish(agCam);}catch(e){}try{agCam.close();}catch(e){}agCam=null;}
+  camOn=false;elCls('cam-box','remove','show');elCls('btn-cam','remove','on');elSet('cam-lb','text','Caméra');
+  if(fbOk)db.ref('classe/live').update({camOn:false});
 }
+async function flipCam(){camFace=camFace==='user'?'environment':'user';if(camOn){await stopCam();await toggleCam();}}
 
-async function demarrerEcouteAudio(){
-  if(!fbOk||!db)return;
-  if(CU.plan==='free'){showAudBan(true);return;}
-  showAudBan(true);
-  if(AGORA_APP_ID!=='VOTRE_APP_ID_AGORA'){
-    loadAgoraSdk(async(err)=>{
-      if(err){demarrerEcouteFirebase();return;}
-      try{
-        agoraClient=AgoraRTC.createClient({mode:'rtc',codec:'h264'});
-        AgoraRTC.setLogLevel(4);
-        agoraClient.on('user-published',async(user,mt)=>{
-          try{
-            await agoraClient.subscribe(user,mt);
-            if(mt==='audio'){
-              user.audioTrack.play();
-              audioUnlocked=true;
-              elSet('btn-aok','display','none');
-              // Cacher la bannière "activer son"
-              const ab=el('aud-ban');
-              if(ab){
-                ab.innerHTML='<div class="abs"><div class="ab"></div><div class="ab"></div><div class="ab"></div><div class="ab"></div><div class="ab"></div></div>'
-                  +'<span style="flex:1">🔊 Prof. TONI parle en direct</span>';
-              }
-            }
-          }catch(e){console.warn('Subscribe err:',e);}
-        });
-        agoraClient.on('user-unpublished',(user,mt)=>{
-          if(mt==='audio'){
-            const ab=el('aud-ban');if(ab)ab.classList.remove('show');
-          }
-        });
-        await agoraClient.join(AGORA_APP_ID,AGORA_CHANNEL,null,CU.id||('e'+Date.now().toString(36)));
-      }catch(e){demarrerEcouteFirebase();}
-    });
-  }else{demarrerEcouteFirebase();}
-}
-
-function demarrerEcouteFirebase(){
-  db.ref('classe/audio_seq').off();
-  db.ref('classe/audio_seq').on('value',snap=>{
-    const seq=snap.val();
-    if(!seq||seq<=lastSeqElv)return;
-    lastSeqElv=seq;
-    db.ref('classe/audio/c'+seq).get().then(s2=>{
-      const c=s2.val();
-      if(c&&c.d){
-        audioQueue.push({data:c.d,mime:c.m||'audio/webm',seq:c.s});
-        if(audioQueue.length>6)audioQueue.splice(0,audioQueue.length-4);
-        if(!audioPlaying)jouerProchainChunk();
-      }
-    }).catch(()=>{});
-  });
-}
-
-function jouerProchainChunk(){
-  if(!audioQueue.length){audioPlaying=false;return;}
-  if(!audioUnlocked){audioPlaying=false;elSet('btn-aok','display','flex');return;}
-  audioPlaying=true;
-  const chunk=audioQueue.shift();
-  try{
-    const raw=atob(chunk.data);
-    const arr=new Uint8Array(raw.length);
-    for(let i=0;i<raw.length;i++)arr[i]=raw.charCodeAt(i);
-    const blob=new Blob([arr],{type:chunk.mime||'audio/webm'});
-    const url=URL.createObjectURL(blob);
-    let a=document.getElementById('paud-chunk');
-    if(!a){a=document.createElement('audio');a.id='paud-chunk';a.setAttribute('playsinline','');document.body.appendChild(a);}
-    a.src=url;a.volume=1.0;
-    a.onended=()=>{URL.revokeObjectURL(url);jouerProchainChunk();};
-    a.onerror=()=>{URL.revokeObjectURL(url);audioPlaying=false;setTimeout(jouerProchainChunk,100);};
-    const p=a.play();
-    if(p instanceof Promise){
-      p.then(()=>{audioUnlocked=true;elSet('btn-aok','display','none');})
-       .catch(()=>{URL.revokeObjectURL(url);audioUnlocked=false;audioPlaying=false;audioQueue.unshift(chunk);elSet('btn-aok','display','flex');});
-    }
-  }catch(e){audioPlaying=false;setTimeout(jouerProchainChunk,200);}
-}
-
-function autoAud(){
-  audioUnlocked=true;elSet('btn-aok','display','none');toast('🔊 Son activé !');
-  try{
-    const ctx=new(window.AudioContext||window.webkitAudioContext)();
-    const b=ctx.createBuffer(1,1,22050);const s=ctx.createBufferSource();
-    s.buffer=b;s.connect(ctx.destination);s.start(0);
-    ctx.resume().then(()=>{if(audioQueue.length&&!audioPlaying)jouerProchainChunk();});
-  }catch(e){if(audioQueue.length&&!audioPlaying)jouerProchainChunk();}
-}
-
+// ── Son côté élève ──
+function autoAud(){elSet('btn-aok','display','none');toast('🔊 Son activé');}
 function showAudBan(on){
   const ab=el('aud-ban');if(!ab)return;
-  if(on&&CU.plan==='free'){
+  if(on&&CU.plan==='free'&&CU.role!=='prof'){
     ab.classList.add('show');
-    ab.innerHTML='<span>🔒</span><span style="flex:1;font-size:.75rem"> Voix — abonnés uniquement</span>'
-      +'<button onclick="showUpgrade()" style="padding:.3rem .7rem;background:var(--go);color:#000;border:none;border-radius:7px;font-weight:800;font-size:.72rem;cursor:pointer;">💎 Upgrader</button>';
+    ab.innerHTML='<span>🔒</span><span style="flex:1;font-size:.75rem">Voix — abonnés uniquement</span><button onclick="showUpgrade()" style="padding:.3rem .7rem;background:var(--go);color:#000;border:none;border-radius:7px;font-weight:800;font-size:.72rem;cursor:pointer;">💎 Upgrader</button>';
     return;
   }
-  if(on){
-    ab.classList.add('show');
-    ab.innerHTML='<div class="abs"><div class="ab"></div><div class="ab"></div><div class="ab"></div><div class="ab"></div><div class="ab"></div></div>'
-      +'<span style="flex:1">🔊 Prof. TONI parle en direct</span>'
-      +(audioUnlocked?'':'<button id="btn-aok" onclick="autoAud()" style="padding:.3rem .75rem;background:var(--rd);color:#fff;border:none;border-radius:7px;font-weight:800;font-size:.72rem;cursor:pointer;flex-shrink:0;">▶ Activer le son</button>');
-  }else{ab.classList.remove('show');}
+  if(!on||CU.role==='prof'){ab.classList.remove('show');return;}
+  ab.classList.add('show');
+  ab.innerHTML='<div class="abs"><div class="ab"></div><div class="ab"></div><div class="ab"></div><div class="ab"></div><div class="ab"></div></div><span style="flex:1">🔊 Prof. TONI parle en direct</span><button id="btn-aok" onclick="autoAud()" style="display:none;padding:.3rem .75rem;background:var(--rd);color:#fff;border:none;border-radius:7px;font-weight:800;font-size:.72rem;cursor:pointer;flex-shrink:0;">▶ Activer le son</button>';
 }
-async function creerPeer(eid){}
-async function recOffer(data){}
-const RTC_CFG={iceServers:[]};
 
-// ══ CAMÉRA ══
-async function toggleCam(){
-  if(!camOn){
-    try{
-      camStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:false});
-      const cv=el('cam-vid');if(cv)cv.srcObject=camStream;
-      camOn=true;elCls('btn-cam','add','on');elSet('cam-lb','text','CAM ON');elCls('cam-box','add','show');
-      if(fbOk)db.ref('classe/cam').set(true);toast('📹 Caméra activée');
-    }catch(e){toast('❌ Caméra refusée');}
-  }else{stopCam();}
+// ── Écoute selon le rôle (mains levées) ──
+function ecouterRole(){
+  if(!fbOk||!db)return;
+  db.ref('classe/main').off();db.ref('classe/live').off();
+  if(CU.role==='prof'){
+    db.ref('classe/main').on('value',snap=>{mainData=snap.val()||{};renderMains();majEleves(lastPres);});
+  }else{
+    db.ref('classe/live').on('value',snap=>{const d=snap.val()||{};if(CU.plan==='free')showAudBan(!!d.micOn);});
+    db.ref('classe/main/'+CU.id).on('value',snap=>{
+      const d=snap.val();
+      if(!d){mainLevee=false;if(floorOn)libererParole();majStBar();return;}
+      mainLevee=true;
+      if(d.statut==='autorise'&&!floorOn)prendreParole();
+      else if(d.statut==='refuse'){mainLevee=false;db.ref('classe/main/'+CU.id).remove();toast('ℹ️ Pas possible maintenant — posez votre question dans le Chat');}
+      else if(d.statut==='coupe'){libererParole();mainLevee=false;db.ref('classe/main/'+CU.id).remove();toast('🔇 Le prof a repris la parole');}
+      majStBar();
+    });
+  }
 }
-function stopCam(){
-  camOn=false;
-  if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null;}
-  elCls('cam-box','remove','show');elCls('btn-cam','remove','on');elSet('cam-lb','text','Caméra');
-  if(fbOk)db.ref('classe/cam').set(false);toast('📹 Caméra désactivée');
+function beep(){try{const x=new(window.AudioContext||window.webkitAudioContext)();[784,1047].forEach((f,k)=>{const o=x.createOscillator(),g=x.createGain();o.connect(g);g.connect(x.destination);o.frequency.value=f;const t=x.currentTime+k*.16;g.gain.setValueAtTime(.18,t);g.gain.exponentialRampToValueAtTime(.001,t+.3);o.start(t);o.stop(t+.3);});}catch(e){}}
+
+// ── Prof : voir et gérer les mains levées ──
+function renderMains(){
+  const ent=Object.entries(mainData);
+  const dem=ent.filter(([i,v])=>v.statut==='demande').sort((a,b)=>(a[1].ts||0)-(b[1].ts||0));
+  const pk=ent.find(([i,v])=>v.statut==='autorise');
+  eleveAuth=pk?pk[0]:null;
+  const hb=el('hand-ban');
+  if(hb){hb.classList.toggle('show',dem.length>0);if(dem.length)hb.innerHTML='<span class="hw">✋</span><span style="flex:1"><b>'+escHtml(dem[0][1].nom)+'</b>'+(dem.length>1?' + '+(dem.length-1)+' autre(s)':'')+' veut parler</span><span class="hgo">Voir ('+dem.length+')</span>';}
+  const sb=el('spk-ban');if(sb){sb.classList.toggle('show',!!pk);if(pk)elSet('spk-n','text','🎙️ '+pk[1].nom+' parle');}
+  const lst=el('hs-list');
+  if(lst){
+    let h='';
+    if(pk)h+='<div class="hs-row" style="border-color:#3b82f666"><span>🎙️</span><span class="nm">'+escHtml(pk[1].nom)+' parle</span><button class="hs-no" onclick="couperParole()">🔇 Couper</button></div>';
+    h+=dem.map(([id,v])=>'<div class="hs-row"><span>✋</span><span class="nm">'+escHtml(v.nom)+'<div class="tm">il y a '+Math.max(0,Math.round((Date.now()-(v.ts||Date.now()))/1000))+' s</div></span><button class="hs-ok" onclick="autoriserP(\''+id+'\')">🎙️ Donner le micro</button><button class="hs-no" onclick="refuserP(\''+id+'\')">✕</button></div>').join('');
+    lst.innerHTML=h||'<div style="text-align:center;color:var(--mu);padding:1.5rem;font-size:.82rem">Aucune main levée</div>';
+  }
+  if(dem.length>nbMainsPrec){beep();try{navigator.vibrate&&navigator.vibrate([150,80,150]);}catch(e){}toast('✋ '+dem[dem.length-1][1].nom+' lève la main');}
+  nbMainsPrec=dem.length;
+  if(!dem.length&&!pk)fermerMains();
+}
+function ouvrirMains(){elCls('hand-sheet','add','show');renderMains();}
+function fermerMains(){elCls('hand-sheet','remove','show');}
+function autoriserP(id){
+  if(!fbOk)return;
+  if(eleveAuth&&eleveAuth!==id)db.ref('classe/main/'+eleveAuth).update({statut:'coupe'});
+  db.ref('classe/main/'+id).update({statut:'autorise'});
+  toast('✅ Micro donné à '+((mainData[id]||{}).nom||'l\'élève'));
+}
+function refuserP(id){if(fbOk)db.ref('classe/main/'+id).update({statut:'refuse'});}
+function couperParole(){if(fbOk&&eleveAuth)db.ref('classe/main/'+eleveAuth).update({statut:'coupe'});}
+
+// ── Élève : lever la main puis parler ──
+async function leverMain(){
+  if(!fbOk){toast('⚠️ Connexion requise');return;}
+  if(mainLevee){annulerMain();return;}
+  try{const s=await navigator.mediaDevices.getUserMedia({audio:true});s.getTracks().forEach(t=>t.stop());}
+  catch(e){toast('⚠️ Autorisez le micro pour pouvoir poser votre question');return;}
+  const r=db.ref('classe/main/'+CU.id);
+  await r.set({nom:CU.nom||'Apprenant',statut:'demande',ts:Date.now()});
+  r.onDisconnect().remove();
+  mainLevee=true;majStBar();toast('✋ Main levée — le prof est prévenu');
+}
+function annulerMain(){mainLevee=false;if(fbOk)db.ref('classe/main/'+CU.id).remove();majStBar();}
+async function prendreParole(){
+  floorOn=true;stMuted=false;majStBar();
+  try{
+    const c=await liveReady();
+    await c.setClientRole('host');
+    agMic=await AgoraRTC.createMicrophoneAudioTrack(AUDIO_CFG);
+    await c.publish(agMic);
+    toast('🎙️ Vous avez la parole — posez votre question !');
+    try{navigator.vibrate&&navigator.vibrate([200,100,200]);}catch(e){}
+  }catch(e){floorOn=false;toast(errMsg(e,'le micro'));if(fbOk)db.ref('classe/main/'+CU.id).remove();}
+  majStBar();
+}
+async function libererParole(){
+  floorOn=false;stMuted=false;
+  if(agMic){try{await ag.unpublish(agMic);}catch(e){}try{agMic.close();}catch(e){}agMic=null;}
+  try{if(ag)await ag.setClientRole('audience',{level:1});}catch(e){}
+  majStBar();
+}
+function terminerParole(){libererParole();annulerMain();}
+function rendreMic(){terminerParole();}
+function togMuteSt(){if(!agMic)return;stMuted=!stMuted;agMic.setEnabled(!stMuted);majStBar();}
+function majStBar(){
+  const b=el('st-bar');if(!b||CU.role==='prof')return;
+  if(floorOn)b.innerHTML='<button class="stb-live">'+(stMuted?'🔇 Micro coupé':'🎙️ Vous parlez')+'</button><button class="stb-sm" onclick="togMuteSt()">'+(stMuted?'Réactiver':'Muet')+'</button><button class="stb-end" onclick="terminerParole()">✔ Terminer</button>';
+  else if(mainLevee)b.innerHTML='<button class="stb-wait">⏳ Main levée — en attente</button><button class="stb-end" onclick="annulerMain()">✕</button>';
+  else b.innerHTML='<button class="stb-hand" onclick="leverMain()">✋ Lever la main</button>';
 }
 
 // ══ ENREGISTREMENT ══
@@ -2421,31 +2367,6 @@ function genCert(){
 }
 
 
-// ══ LEVER LA MAIN ══
-async function leverMain(){
-  if(!fbOk){toast('⚠️ Connexion requise');return;}
-  if(mainLevee){mainLevee=false;resetMain();db.ref('classe/main/'+CU.id).remove();toast('✋ Demande annulée');return;}
-
-  // Vérifier si quelqu'un parle déjà — informer l'élève avant qu'il attende inutilement
-  try{
-    const snap=await db.ref('classe/main').get();
-    const d=snap.val()||{};
-    const occupe=Object.values(d).find(v=>v.statut==='autorise');
-    if(occupe){
-      toast('🎙️ '+occupe.nom+' a déjà la parole — votre demande sera traitée après');
-    }
-  }catch(e){}
-
-  mainLevee=true;
-  const btn=el('btn-main');if(btn){btn.textContent='⏳ Main levée — En attente...';btn.style.background='#fbbf2433';btn.style.borderColor='#fbbf2488';}
-  db.ref('classe/main/'+CU.id).set({nom:CU.nom||'Apprenant',statut:'demande',ts:Date.now()});
-  toast('✋ Main levée');
-}
-function resetMain(){const btn=el('btn-main');if(!btn)return;btn.style.display='flex';btn.textContent='✋ Lever la main pour parler';btn.style.background='#fbbf2422';btn.style.borderColor='#fbbf2444';}
-function autoriserP(id,nm){if(!fbOk)return;if(eleveAuth&&eleveAuth!==id)db.ref('classe/main/'+eleveAuth).update({statut:'coupe'});db.ref('classe/main/'+id).update({statut:'autorise'});toast('✅ Parole accordée à '+nm);}
-function refuserP(id){if(!fbOk)return;db.ref('classe/main/'+id).update({statut:'refuse'});toast('❌ Demande refusée');}
-function couperParole(){if(!fbOk||!eleveAuth)return;db.ref('classe/main/'+eleveAuth).update({statut:'coupe'});eleveAuth=null;elSet('elv-pk','display','none');toast('🔇 Parole coupée');}
-function rendreMic(){if(!fbOk)return;elSet('mic-acc','display','none');elSet('btn-main','display','flex');resetMain();mainLevee=false;db.ref('classe/main/'+CU.id).remove();toast('Micro rendu');}
 
 // == PDF / IMAGE - defilement vertical + zoom ==
 document.getElementById('ifl').addEventListener('change',async e=>{
@@ -2786,11 +2707,12 @@ function terminerCours(){
 // ══ ÉLÈVES PRÉSENTS ══
 function majEleves(data){
   try{
-    const elvs=Object.values(data).filter(u=>u.role==='eleve');
+    lastPres=data||{};
+    const elvs=Object.entries(lastPres).filter(([i,u])=>u.role==='eleve');
     const nb=el('nb-ec');if(nb)nb.textContent='('+elvs.length+')';
     const lst=el('elv-lst');if(!lst)return;
     if(!elvs.length){lst.innerHTML='<div style="text-align:center;color:var(--mu);font-size:.8rem;padding:2rem 0;opacity:.52">Aucun apprenant</div>';return;}
-    lst.innerHTML=elvs.map(u=>'<div class="elvi"><div class="edo"></div><span>'+u.nom+'</span></div>').join('');
+    lst.innerHTML=elvs.map(([id,u])=>{const m=mainData[id];const ic=m&&m.statut==='autorise'?'🎙️':(m&&m.statut==='demande'?'✋':'');return '<div class="elvi"><div class="edo"></div><span>'+escHtml(u.nom)+'</span>'+(ic?'<b style="margin-left:auto">'+ic+'</b>':'')+'</div>';}).join('');
   }catch(e){}
 }
 
@@ -3939,161 +3861,6 @@ function chargerSurveillance(){
 }
 
 
-var jitsiApi=null;
-var JITSI_DOMAIN="meet.jit.si";
-var JITSI_ROOM="ProfTONIClasseCEGKou2026";
-
-function loadJitsiScript(cb){
-  if(window.JitsiMeetExternalAPI){cb();return;}
-  var s=document.createElement("script");
-  s.src="https://"+JITSI_DOMAIN+"/external_api.js";
-  s.onload=cb;
-  s.onerror=function(){toast("Impossible de charger Jitsi");};
-  document.head.appendChild(s);
-}
-
-function ouvrirJitsi(){
-  if(jitsiApi){stopJitsi();return;}
-  loadJitsiScript(function(){
-    demarrerJitsiEmbed(true);
-  });
-}
-
-async function demarrerJitsiEmbed(estProf){
-  var container=el("jitsi-embed");
-  if(!container)return;
-  container.style.display="block";
-
-  // Forcer la VRAIE demande de permission micro du navigateur AVANT Jitsi.
-  // Sans ça, le prompt natif n'apparaît jamais de façon fiable dans un iframe caché.
-  try{
-    var testStream=await navigator.mediaDevices.getUserMedia({audio:true});
-    testStream.getTracks().forEach(function(t){t.stop();});
-  }catch(permErr){
-    toast(estProf?'⚠️ Autorisez le micro dans les paramètres du navigateur':'⚠️ Autorisez le micro pour entendre/parler');
-    container.style.display='none';
-    return;
-  }
-
-  var options={
-    roomName:JITSI_ROOM,
-    width:"100%",
-    height:estProf?70:90,
-    parentNode:container,
-    configOverwrite:{
-      startWithAudioMuted:!estProf, // élève rejoint muet par défaut (sécurité tour de parole)
-      startWithVideoMuted:true,
-      prejoinPageEnabled:false,
-      disableModeratorIndicator:true,
-      enableClosePage:false,
-      toolbarButtons:estProf
-        ?["microphone","hangup","settings"]
-        :["microphone"]
-    },
-    interfaceConfigOverwrite:{
-      SHOW_JITSI_WATERMARK:false,
-      SHOW_WATERMARK_FOR_GUESTS:false,
-      MOBILE_APP_PROMO:false,
-      DISABLE_VIDEO_BACKGROUND:true,
-      TOOLBAR_ALWAYS_VISIBLE:false,
-      filmStripOnly:false
-    },
-    userInfo:{displayName:(CU.nom||"Utilisateur")+(estProf?" (Prof)":"")}
-  };
-  jitsiApi=new JitsiMeetExternalAPI(JITSI_DOMAIN,options);
-
-  jitsiApi.addEventListener("videoConferenceJoined",function(){
-    toast(estProf?"🎙️ Micro actif ! Tous les élèves vous entendent.":"Connecté au cours en direct !");
-    if(estProf){
-      if(fbOk&&db){
-        db.ref("classe/jitsi").set({actif:true,ts:Date.now()});
-        db.ref("classe/jitsi").onDisconnect().update({actif:false});
-        // Message automatique dans le chat pour avertir tous les élèves
-        db.ref("messages_broadcast").push({
-          nom:"Prof. TONI",
-          txt:"🎙️ Le micro est activé — je parle en direct, écoutez-moi !",
-          ts:Date.now(),
-          de:"prof",
-          type:"audio_on"
-        });
-      }
-      var bj=el("btn-jitsi");
-      if(bj){bj.style.background="#ef444422";bj.style.color="var(--rd)";bj.style.borderColor="#ef444444";bj.innerHTML="🔴 Direct ON";}
-    }
-  });
-
-  jitsiApi.addEventListener("videoConferenceLeft",function(){
-    fermerJitsiEmbed(estProf);
-  });
-
-  // Eleve : rester en audio seul, masquer completement la zone video
-  if(!estProf){
-    setTimeout(function(){
-      try{jitsiApi.executeCommand("setVideoQuality",180);}catch(e){}
-    },1000);
-  }
-}
-
-function fermerJitsiEmbed(estProf){
-  if(jitsiApi){try{jitsiApi.dispose();}catch(e){}jitsiApi=null;}
-  var container=el("jitsi-embed");
-  if(container){container.style.display="none";container.innerHTML="";}
-  if(estProf){
-    if(fbOk&&db)db.ref("classe/jitsi").update({actif:false});
-    var bj=el("btn-jitsi");
-    if(bj){bj.style.background="#25d36615";bj.style.color="#25d366";bj.style.borderColor="#25d36644";bj.innerHTML="📹 Jitsi";}
-  }
-  var ab=el("aud-ban");if(ab)ab.classList.remove("show");
-}
-
-function stopJitsi(){
-  fermerJitsiEmbed(true);
-  toast("Direct termine");
-}
-
-function ecouterJitsi(){
-  if(!fbOk||!db)return;
-  db.ref("classe/jitsi").on("value",function(snap){
-    var d=snap.val();
-    var ab=el("aud-ban");if(!ab)return;
-    if(d&&d.actif){
-      if(jitsiApi)return; // deja connecte
-      // Connexion AUTOMATIQUE — l'élève entend sans avoir à cliquer
-      ab.classList.add("show");
-      while(ab.firstChild)ab.removeChild(ab.firstChild);
-      var ic=document.createElement("span");ic.textContent="🔴 ";ab.appendChild(ic);
-      var tx=document.createElement("span");tx.style.flex="1";tx.style.fontSize=".72rem";tx.textContent="Connexion au direct...";ab.appendChild(tx);
-
-      // Petit son d'alerte pour que l'élève remarque même sans regarder l'écran
-      try{
-        var ctx=new(window.AudioContext||window.webkitAudioContext)();
-        var o=ctx.createOscillator();var g=ctx.createGain();
-        o.connect(g);g.connect(ctx.destination);
-        o.frequency.value=660;g.gain.setValueAtTime(.12,ctx.currentTime);
-        g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.4);
-        o.start(ctx.currentTime);o.stop(ctx.currentTime+.4);
-      }catch(e){}
-
-      loadJitsiScript(function(){
-        demarrerJitsiEmbed(false);
-        setTimeout(function(){
-          while(ab.firstChild)ab.removeChild(ab.firstChild);
-          var ic2=document.createElement("span");ic2.textContent="🔴 ";ab.appendChild(ic2);
-          var tx2=document.createElement("span");tx2.style.flex="1";tx2.style.fontSize=".72rem";tx2.textContent="Prof. TONI parle en direct — vous entendez";ab.appendChild(tx2);
-          var btnOff=document.createElement("button");
-          btnOff.style.cssText="padding:.25rem .6rem;background:#ffffff15;color:#fff;border:1px solid #ffffff33;border-radius:7px;font-weight:700;font-size:.65rem;cursor:pointer;flex-shrink:0;";
-          btnOff.textContent="🔇 Couper";
-          btnOff.onclick=function(){fermerJitsiEmbed(false);ab.classList.remove("show");};
-          ab.appendChild(btnOff);
-        },1500);
-      });
-    }else{
-      if(jitsiApi&&CU.role!=="prof"){fermerJitsiEmbed(false);}
-      if(CU.plan!=="free")ab.classList.remove("show");
-    }
-  });
-}
-
 // ══ CSS SHAKE ══
 const st=document.createElement('style');
 st.textContent='@keyframes shake{0%,100%{transform:translateX(0);}20%{transform:translateX(-8px);}40%{transform:translateX(8px);}60%{transform:translateX(-5px);}80%{transform:translateX(5px);}}';
@@ -4155,7 +3922,14 @@ window.onFirebaseReady=function(){
   if(auth&&!auth.currentUser)auth.signInAnonymously().catch(()=>{});
 };
 </script>
-font-size:.65rem;"><b id="file-pac">1</b>&nbsp;/&nbsp;<span id="file-ptt">?</span></div>
+<!-- ════ VISIONNEUSE FICHIER (élève) ════ -->
+<div id="file-ov">
+  <div class="file-hdr">
+    <button class="tb tb-r" onclick="fermerFichierEleve()">← Fermer</button>
+    <div class="file-title" id="file-title">Document</div>
+    <div id="file-pp" style="display:none;align-items:center;gap:.3rem;">
+      <button class="tb tb-gh" id="file-pg-prev" onclick="filePage(-1)" style="padding:.22rem .5rem;font-size:.72rem;display:none;">◀</button>
+      <div style="font-family:'JetBrains Mono',monospace;color:var(--gr);font-size:.65rem;"><b id="file-pac">1</b>&nbsp;/&nbsp;<span id="file-ptt">?</span></div>
       <button class="tb tb-gh" id="file-pg-next" onclick="filePage(1)" style="padding:.22rem .5rem;font-size:.72rem;display:none;">▶</button>
     </div>
   </div>
@@ -4169,25 +3943,6 @@ font-size:.65rem;"><b id="file-pac">1</b>&nbsp;/&nbsp;<span id="file-ptt">?</spa
     <button class="abtn abtn-g" onclick="toast('📸 Capture envoyée au prof !')">📸 Envoyer au prof</button>
   </div>
 </div>
-
-<!-- ════ SURVEILLANCE PROF (caméras élèves) ════ -->
-<div id="surv-ov">
-  <div class="surv-hdr">
-    <div class="surv-title">
-      🎥 Surveillance — Devoirs sur table
-      <div class="surv-badge" id="surv-count">0 caméra(s)</div>
-    </div>
-    <button onclick="fermerSurveillance()" style="background:#ffffff11;border:1px solid var(--bd);color:var(--mu2);border-radius:8px;padding:.28rem .65rem;font-size:.75rem;cursor:pointer;font-family:'Outfit',sans-serif;font-weight:700;">✕ Fermer</button>
-  </div>
-  <div id="surv-grid">
-    <div class="surv-empty" id="surv-empty">
-      <div style="font-size:2.5rem;margin-bottom:.6rem;opacity:.3;">🎥</div>
-      <div style="font-weight:700;margin-bottom:.25rem;">Aucune caméra active</div>
-      <div style="font-size:.75rem;opacity:.6;">Les élèves doivent activer leur caméra depuis l'espace "Mes devoirs"</div>
-    </div>
-  </div>
-</div>
-
 
 <!-- ════ MODAL DONNER DEVOIR ════ -->
 <div id="mod-devoir" style="position:fixed;inset:0;background:#000000dd;display:none;align-items:flex-end;justify-content:center;z-index:200;" onclick="if(event.target===this)fermerModalDevoir()">
